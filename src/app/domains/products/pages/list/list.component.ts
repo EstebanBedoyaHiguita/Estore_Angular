@@ -2,11 +2,12 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {ProductComponent} from './../../components/product/product.component';
 import {Product} from './../../../shared/models/products.model';
+import {HeaderComponent} from './../../../shared/componets/header/header.component'
 
 @Component({
   selector: 'app-list',
   standalone: true,
-  imports: [CommonModule, ProductComponent],
+  imports: [CommonModule, ProductComponent,HeaderComponent],
   templateUrl: './list.component.html',
   styleUrl: './list.component.css'
 })
