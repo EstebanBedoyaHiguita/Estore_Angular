@@ -1,8 +1,11 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {ProductComponent} from './../../components/product/product.component';
-import {Product} from './../../../shared/models/products.model';
-import {HeaderComponent} from './../../../shared/componets/header/header.component'
+import {ProductComponent} from '@products/components/product/product.component';
+import {Product} from '@shared/models/products.model';
+import {HeaderComponent} from '@shared/componets/header/header.component'
+import { CarService } from '@shared/services/car.service';
+import { ProductService } from '@shared/services/product.service';
+
 
 @Component({
   selector: 'app-list',
@@ -14,41 +17,23 @@ import {HeaderComponent} from './../../../shared/componets/header/header.compone
 export class ListComponent {
 
   products = signal<Product[]>([]);
-  car = signal<Product[]>([]);
+  private cartService = inject(CarService);
+  private productService = inject(ProductService);
 
-  constructor(){
-    const initProducts: Product[] = [
-      {
-        id: Date.now (),
-        title: 'Pro 1',
-        price: 100,
-        image: 'https://picsum.photos/400/400?r=23',
-        creationAt: new Date().toISOString(),
-
+  ngOnInit(){
+    this.productService.getProducts()
+    .subscribe({
+      next: (products) => {
+        this.products.set(products);
       },
-      {
-        id: Date.now (),
-        title: 'Pro 2',
-        price: 100,
-        image: 'https://picsum.photos/400/400?r=123',
-        creationAt: new Date().toISOString(),
-
-      },
-      {
-        id: Date.now (),
-        title: 'Pro 3',
-        price: 100,
-        image: 'https://picsum.photos/400/400?r=235',
-        creationAt: new Date().toISOString(),
+      error:()=> {
 
       }
-    ];
-    this.products.set(initProducts);
-  };
+    })
+  }
 
-  addToCar(product : Product){
-    this.car.update( prevState => [...prevState , product]);
-
+  addToCart(product : Product){
+    this.cartService.addToCArt(product)
   }
 
 }
